@@ -8,5 +8,5 @@
 ## Deploying in develop
 ### Installation
 1. Open 2 terminal:
-    1. Run project  ```nodemon ./dist/app.js```
-    2. Open typescript  ```tsc --watch```
+    a. Run project  ```nodemon ./dist/app.js```
+    b. Open typescript  ```tsc --watch```
