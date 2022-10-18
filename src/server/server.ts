@@ -1,6 +1,8 @@
 import express, {Application} from "express";
-import userRouter from "../router/example.router";
 import cors from "cors";
+import uploadsRouter from "../router/uploads.router";
+import fileUpload from "express-fileupload";
+// import multipart from "connect-multiparty";
 
 class Server {
     private app: Application;
@@ -10,12 +12,13 @@ class Server {
         this.app = express();
         this.port = process.env.PORT || '8000';
 
-        this.configRoutes();
         this.middlewares();
+        this.configureFiles();
+        this.configRoutes();
     }
 
     private configRoutes() {
-        this.app.use('/api/examples', userRouter);
+        this.app.use('/api/uploads', uploadsRouter);
     }
 
     private middlewares() {
@@ -24,7 +27,12 @@ class Server {
         // Ready body
         this.app.use(express.json());
         // Read public folder
-        this.app.use(express.static(__dirname+'/../public'))
+        this.app.use(express.static(__dirname+'/../public'));
+    }
+
+    private configureFiles() {
+        // Use files
+        this.app.use(fileUpload());
     }
 
     listen() {
