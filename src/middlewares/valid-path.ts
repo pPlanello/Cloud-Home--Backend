@@ -6,7 +6,7 @@ export const isValidPath = (value: string, { }) => {
         throw new Error("The 'path' field not have the correct format.");
     }
 
-    if (path[0] !== '/') {
+    if (path[0] !== '') {
         throw new Error("The 'path' field not have the first '/'.");
     }
 
