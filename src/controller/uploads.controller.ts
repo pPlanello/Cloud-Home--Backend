@@ -28,6 +28,7 @@ export const uploadFiles = async (req: Request, res: Response) => {
         return moveFiles(file, pathCloud.absolutePath)
     });
 
+    // Manage promise and send response
     Promise.allSettled(promiseFiles)
         .then(results => {
             const { numberUpdatedFiles, numberFiles, errors } = managePromiseSaveFiles(results, path);
@@ -60,18 +61,21 @@ export const uploadFiles = async (req: Request, res: Response) => {
 
 }
 
-function managePromiseSaveFiles(results: PromiseSettledResult<unknown>[], path: any) {
+function managePromiseSaveFiles(promiseResults: PromiseSettledResult<unknown>[], path: any) {
     let numberUpdatedFiles = 0;
     let numberFiles = 0;
     let errors: ErrorSaveFile[] = [];
 
-    results.forEach(promise => {
+    promiseResults.forEach(promise => {
         numberFiles += 1;
 
         if (promise.status === 'rejected') {
-            const fileName = promise.reason['nameFile'];
             const description = promise.reason['alreadyExist'] ? 'File already exist' : `You do not have permissions to save in route ${path}`;
-            errors.push({ fileName, description });
+            
+            errors.push({
+                fileName: promise.reason['nameFile'],
+                description
+            });
         }
 
         if (promise.status === 'fulfilled') {
